@@ -277,21 +277,3 @@ def level1_bfs():
     
     root.mainloop()
 
-def main():
-    create_screen()
-    '''
-    map_matrix, n, m, t, f = read_map_from_file('map.txt')  # Đọc bản đồ từ file
-    #viet ham tim diem bat dau va ket thuc
-    
-    start, goal = find_start_goal(map_matrix)
-    path = dijkstra(map_matrix, start, goal)  # Tìm đường đi ngắn nhất
-
-    root = tk.Tk() #tao cua so Tkinter
-    app = PathFinderApp(root, map_matrix, n, m, t, f)
-    app.draw_path(path)
-    
-    root.mainloop()
-    '''
-
-if __name__ == "__main__":
-    main()
