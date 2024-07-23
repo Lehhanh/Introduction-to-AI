@@ -14,7 +14,7 @@ def readInput(filepath):
             map.append(newRow)
     except:
         print('The number of row or column is invalid')
-    return map
+    return row, col, map
 
 # Getting path from explored set
 def reconstructPath(exploredSet, startPos, goalPos, isGinE):
