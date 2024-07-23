@@ -1,7 +1,8 @@
 import tkinter as tk
 from queue import PriorityQueue
-
-#import tkinter as tk
+from helper import*
+from level_1 import*
+from Node import*
 from tkinter import messagebox
 from tkinter import filedialog
 
@@ -70,14 +71,17 @@ def algorithm(start_label, level1_button, level2_button, level3_button, level4_b
     BFS_button = tk.Button(root, text="BFS", width=15, height=5, command=lambda: level1_bfs(), bg="Orange", fg="Black")
     BFS_button.grid(row=1, column=0, padx=5, pady=3)
 
-    DFS_button = tk.Button(root, text="DFS", width=15, height=5, command=level2, bg="Orange", fg="Black")
+    DFS_button = tk.Button(root, text="DFS", width=15, height=5, command=lambda: level1_dfs(), bg="Orange", fg="Black")
     DFS_button.grid(row=1, column=1, padx=5, pady=3)
 
-    UCS_button = tk.Button(root, text="UCS", width=15, height=5, command=level3, bg="Orange", fg="Black")
+    UCS_button = tk.Button(root, text="UCS", width=15, height=5, command=lambda: level1_ucs(), bg="Orange", fg="Black")
     UCS_button.grid(row=2, column=0, padx=3, pady=3)
 
-    GBFS_button = tk.Button(root, text="GBFS", width=15, height=5, command=level4, bg="Orange", fg="Black")
-    GBFS_button.grid(row=2, column=1, padx=3, pady=3)   
+    Astar_button = tk.Button(root, text="A*", width=15, height=5, command=lambda: level1_astar(), bg="Orange", fg="Black")
+    Astar_button.grid(row=2, column=1, padx=3, pady=3)
+
+    GBFS_button = tk.Button(root, text="GBFS", width=15, height=5, command=lambda: level1_gbfs(), bg="Orange", fg="Black")
+    GBFS_button.grid(row=3, column=0, padx=3, pady=3)   
 
 def exit_game(root):
     root.destroy()
@@ -116,6 +120,7 @@ def create_screen():
 #create_screen()
 
 # Đọc bản đồ từ file
+'''
 def read_map_from_file(file_path):
     with open(file_path, 'r') as file:
         #map_data = file.readlines()
@@ -125,21 +130,8 @@ def read_map_from_file(file_path):
         map_matrix = [list(file.readline().strip().split()) for _ in range(n)]
     return map_matrix, n, m, t, f
 
-def readInput(filepath):
-    map = []
-    f = open(filepath)
-    n, m = f.readline().split()
-    try:
-        n = int(n)
-        m = int(m)
-        for i in range (0, n):
-            line = f.readline()
-            newRow = line.split()
-            map.append(newRow)
-    except:
-        print('The number of row or column is invalid')
-    return n, m, map
-
+'''
+    
 # Tim diem bat dau va diem ket thuc
 def find_start_goal(map_matrix):
     start = None
@@ -147,60 +139,10 @@ def find_start_goal(map_matrix):
     for row in range(len(map_matrix)):
         for col in range(len(map_matrix[0])):
             if map_matrix[row][col] == 'S':
-                start = (col, row)
+                start = (row, col)
             elif map_matrix[row][col] == 'G':
-                goal = (col, row)
+                goal = (row, col)
     return start, goal
-
-directions = [(0, 1), (1, 0), (0, -1), (-1, 0)] #Right, Down, Left, Up
-def BFS(map, start, goal):
-    frontier = [start]
-    exploredSet = []
-    while (len(frontier) > 0):
-        currentPos = frontier.pop(0)
-        exploredSet.append(currentPos)
-
-        print(currentPos)
-        for d in directions:
-            newPos = tuple([a+b for a, b in zip(currentPos, d)])
-            print('newPos', newPos)
-            if newPos == goal:
-                print('Goal')
-                return 1, frontier, exploredSet
-            if 0 <= newPos[0] < len(map[0]) and 0 <= newPos[1] < len(map) and map[newPos] != '-1' and newPos not in exploredSet and newPos not in frontier:
-                print('append frontier')
-                frontier.append(newPos)
-    return exploredSet
-
-# Thuật toán Dijkstra
-def dijkstra(map_matrix, start, goal):
-        directions = [(-1, 0), (1, 0), (0, -1), (0, 1)]
-        queue = PriorityQueue()
-        queue.put((0, start))
-        distances = {start: 0}
-        previous = {start: None}
-
-        while not queue.empty():
-            current_distance, current_cell = queue.get()
-            if current_cell == goal:
-                break
-            for direction in directions:
-                neighbor = (current_cell[0] + direction[0], current_cell[1] + direction[1])
-                if (0 <= neighbor[0] < len(map_matrix) and 0 <= neighbor[1] < len(map_matrix[0]) and
-                        map_matrix[neighbor[1]][neighbor[0]] in ('0', 'G')):
-                    distance = current_distance + 1
-                    if neighbor not in distances or distance < distances[neighbor]:
-                        distances[neighbor] = distance
-                        previous[neighbor] = current_cell
-                        queue.put((distance, neighbor))
-
-        path = []
-        cell = goal
-        while cell:
-            path.append(cell)
-            cell = previous[cell]
-        path.reverse()
-        return path
 
 class PathFinderApp:
     #khoi tao map
@@ -256,20 +198,24 @@ class PathFinderApp:
             )
         '''
         for i in range(len(path) - 1):
-            col1, row1 = path[i]
-            col2, row2 = path[i + 1]
+            row1, col1 = path[i]
+            row2, col2 = path[i + 1]
             self.canvas.create_line(
                 col1 * 60 + 60 / 2, row1 * 60 + 60 / 2,
                 col2 * 60 + 60 / 2, row2 * 60 + 60 / 2,
                 fill= "red", width = 2
             )
 
+
 def level1_bfs():
-    #map_matrix, n, m, t, f = read_map_from_file('input1_level1.txt')  # Đọc bản đồ từ file
+    # Đọc bản đồ từ file
     n, m, map_matrix = readInput('input1_level1.txt')
+    #Tim diem bat dau va diem dich
     start, goal = find_start_goal(map_matrix)
-    path = dijkstra(map_matrix, start, goal)  # Tìm đường đi ngắn nhất
-    #path = BFS(map_matrix, start, goal)
+    #Ap dung thuat toan BFS
+    _, _, exploredSet = BFS(map_matrix, start, goal)
+    #Tim duong di
+    path = reconstructPath(exploredSet, start, goal, False)
     root = tk.Tk() #tao cua so Tkinter
     #app = PathFinderApp(root, map_matrix, n, m, t, f)
     app = PathFinderApp(root, map_matrix, n, m)
@@ -277,3 +223,51 @@ def level1_bfs():
     
     root.mainloop()
 
+def level1_dfs():
+    # Đọc bản đồ từ file
+    n, m, map_matrix = readInput('input1_level1.txt')
+    #Tim diem bat dau va diem dich
+    start, goal = find_start_goal(map_matrix)
+    #Ap dung thuat toan BFS
+    _, _, exploredSet = DFS(map_matrix, start, goal)
+    #Tim duong di
+    path = reconstructPath(exploredSet, start, goal, False)
+    root = tk.Tk() #tao cua so Tkinter
+    #app = PathFinderApp(root, map_matrix, n, m, t, f)
+    app = PathFinderApp(root, map_matrix, n, m)
+    app.draw_path(path)
+    
+    root.mainloop()
+
+def level1_ucs():
+    n, m, map_matrix = readInput('input1_level1.txt')
+    start, goal = find_start_goal(map_matrix)
+    _, _, exploredSet = UCS(map_matrix, start, goal)
+    path = reconstructPath(exploredSet, start, goal, False)
+    root = tk.Tk() #tao cua so Tkinter
+    app = PathFinderApp(root, map_matrix, n, m)
+    app.draw_path(path)
+    
+    root.mainloop()
+
+def level1_gbfs():
+    n, m, map_matrix = readInput('input1_level1.txt')
+    start, goal = find_start_goal(map_matrix)
+    _, _, exploredSet = GBFS(map_matrix, start, goal)
+    path = reconstructPath(exploredSet, start, goal, False)
+    root = tk.Tk() #tao cua so Tkinter
+    app = PathFinderApp(root, map_matrix, n, m)
+    app.draw_path(path)
+    
+    root.mainloop()
+
+def level1_astar():
+    n, m, map_matrix = readInput('input1_level1.txt')
+    start, goal = find_start_goal(map_matrix)
+    _, _, exploredSet = Astar(map_matrix, start, goal)
+    path = reconstructPath(exploredSet, start, goal, False)
+    root = tk.Tk() #tao cua so Tkinter
+    app = PathFinderApp(root, map_matrix, n, m)
+    app.draw_path(path)
+    
+    root.mainloop()
