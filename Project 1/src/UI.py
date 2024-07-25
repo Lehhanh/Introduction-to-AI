@@ -114,56 +114,6 @@ class PathFinderApp:
             )
 
 
-    def level1_bfs():
-        algorithm =  "bfs"
-        get_algorithm(algorithm)
-    
-    def level1_dfs():
-        algorithm =  "dfs"
-        get_algorithm(algorithm)
-    
-    def level1_ucs():
-        algorithm =  "ucs"
-        get_algorithm(algorithm)
-    
-    def level1_astar():
-        algorithm =  "astar"
-        get_algorithm(algorithm)
-    
-    def level1_gbfs():
-        algorithm =  "gbfs"
-        get_algorithm(algorithm)
-    
-    def get_algorithm(algorithm):
-        file_path = filedialog.askopenfilename(filetypes=[("Text files", "*.txt")])
-        # Đọc bản đồ từ file
-        n, m, map_matrix = readInput(file_path)
-        #Tim diem bat dau va diem dich
-        start, goal = find_start_goal(map_matrix)
-        if algorithm == "bfs":
-            _, _, exploredSet = BFS(map_matrix, start, goal)
-            root = create_root("BFS") #Ham tao cua so Tkinter
-        elif algorithm == "dfs":
-            _, _, exploredSet = DFS(map_matrix, start, goal)
-            root = create_root("DFS")
-        elif algorithm == "ucs":
-            _, _, exploredSet = UCS(map_matrix, start, goal)
-            root = create_root("UCS")
-        elif algorithm == "astar":
-            _, _, exploredSet = Astar(map_matrix, start, goal)
-            root = create_root("A*")
-        elif algorithm == "gbfs":
-            _, _, exploredSet = GBFS(map_matrix, start, goal)
-            root = create_root("GBFS")
-        #Tim duong di
-        path = reconstructPath(exploredSet, start, goal, False)
-        #root = tk.Tk() #tao cua so Tkinter
-        #app = PathFinderApp(root, map_matrix, n, m, t, f)
-        app = PathFinderApp(root, map_matrix, n, m)
-        app.draw_path(path)
-        
-        root.mainloop()
-
 def create_screen():
     #Tạo cửa sổ
     root = create_root("Searching")
@@ -296,6 +246,56 @@ def algorithm(start_label, level1_button, level2_button, level3_button, level4_b
     
     return_button = tk.Button(root, text="Return", width=8, height=3, command=lambda: return_start(start1_label, BFS_button, UCS_button, Astar_button, GBFS_button, return_button, root), bg="Orange", fg="Black")
     return_button.grid(row=6, column=0, padx=(window_width/2.5 + 50), pady=5)   
+
+def level1_bfs():
+    algorithm =  "bfs"
+    get_algorithm(algorithm)
+    
+def level1_dfs():
+    algorithm =  "dfs"
+    get_algorithm(algorithm)
+    
+def level1_ucs():
+    algorithm =  "ucs"
+    get_algorithm(algorithm)
+    
+def level1_astar():
+    algorithm =  "astar"
+    get_algorithm(algorithm)
+    
+def level1_gbfs():
+    algorithm =  "gbfs"
+    get_algorithm(algorithm)
+    
+ def get_algorithm(algorithm):
+    file_path = filedialog.askopenfilename(filetypes=[("Text files", "*.txt")])
+    # Đọc bản đồ từ file
+    n, m, map_matrix = readInput(file_path)
+    #Tim diem bat dau va diem dich
+    start, goal = find_start_goal(map_matrix)
+    if algorithm == "bfs":
+        _, _, exploredSet = BFS(map_matrix, start, goal)
+        root = create_root("BFS") #Ham tao cua so Tkinter
+    elif algorithm == "dfs":
+        _, _, exploredSet = DFS(map_matrix, start, goal)
+        root = create_root("DFS")
+    elif algorithm == "ucs":
+        _, _, exploredSet = UCS(map_matrix, start, goal)
+        root = create_root("UCS")
+    elif algorithm == "astar":
+        _, _, exploredSet = Astar(map_matrix, start, goal)
+        root = create_root("A*")
+    elif algorithm == "gbfs":
+        _, _, exploredSet = GBFS(map_matrix, start, goal)
+        root = create_root("GBFS")
+    #Tim duong di
+    path = reconstructPath(exploredSet, start, goal, False)
+    #root = tk.Tk() #tao cua so Tkinter
+    #app = PathFinderApp(root, map_matrix, n, m, t, f)
+    app = PathFinderApp(root, map_matrix, n, m)
+    app.draw_path(path)
+        
+    root.mainloop()
 
 def return_start(start1_label, BFS_button, UCS_button, Astar_button, GBFS_button, return_button, root):
     start1_label.grid_forget()
