@@ -114,78 +114,55 @@ class PathFinderApp:
             )
 
 
-def level1_bfs():
-    #Tạo cửa sổ
-    root = create_root("BFS")
-    # Đọc bản đồ từ file
-    n, m, map_matrix = readInput('input1_level1.txt')
-    #Tim diem bat dau va diem dich
-    start, goal = find_start_goal(map_matrix)
-    #Ap dung thuat toan BFS
-    _, _, exploredSet = BFS(map_matrix, start, goal)
-    #Tim duong di
-    path = reconstructPath(exploredSet, start, goal, False)
-    #app = PathFinderApp(root, map_matrix, n, m, t, f)
-    app = PathFinderApp(root, map_matrix, n, m)
-    app.draw_path(path)
+    def level1_bfs():
+        algorithm =  "bfs"
+        get_algorithm(algorithm)
     
-    root.mainloop()
-
-def level1_dfs():
-    #Tạo cửa sổ
-    root = create_root("DFS")
-    # Đọc bản đồ từ file
-    n, m, map_matrix = readInput('input1_level1.txt')
-    #Tim diem bat dau va diem dich
-    start, goal = find_start_goal(map_matrix)
-    #Ap dung thuat toan BFS
-    _, _, exploredSet = DFS(map_matrix, start, goal)
-    #Tim duong di
-    path = reconstructPath(exploredSet, start, goal, False)
-    #app = PathFinderApp(root, map_matrix, n, m, t, f)
-    app = PathFinderApp(root, map_matrix, n, m)
-    app.draw_path(path)
+    def level1_dfs():
+        algorithm =  "dfs"
+        get_algorithm(algorithm)
     
-    root.mainloop()
-
-def level1_ucs():
-    #Tạo cửa sổ
-    root = create_root("UCS")
-
-    n, m, map_matrix = readInput('input1_level1.txt')
-    start, goal = find_start_goal(map_matrix)
-    _, _, exploredSet = UCS(map_matrix, start, goal)
-    path = reconstructPath(exploredSet, start, goal, False)
-    app = PathFinderApp(root, map_matrix, n, m)
-    app.draw_path(path)
+    def level1_ucs():
+        algorithm =  "ucs"
+        get_algorithm(algorithm)
     
-    root.mainloop()
-
-def level1_gbfs():
-    #Tạo cửa sổ
-    root = create_root("GBFS")
-
-    n, m, map_matrix = readInput('input1_level1.txt')
-    start, goal = find_start_goal(map_matrix)
-    _, _, exploredSet = GBFS(map_matrix, start, goal)
-    path = reconstructPath(exploredSet, start, goal, False)
-    app = PathFinderApp(root, map_matrix, n, m)
-    app.draw_path(path)
+    def level1_astar():
+        algorithm =  "astar"
+        get_algorithm(algorithm)
     
-    root.mainloop()
-
-def level1_astar():
-    #Tạo cửa sổ
-    root = create_root("A*")
-
-    n, m, map_matrix = readInput('input1_level1.txt')
-    start, goal = find_start_goal(map_matrix)
-    _, _, exploredSet = Astar(map_matrix, start, goal)
-    path = reconstructPath(exploredSet, start, goal, False)
-    app = PathFinderApp(root, map_matrix, n, m)
-    app.draw_path(path)
+    def level1_gbfs():
+        algorithm =  "gbfs"
+        get_algorithm(algorithm)
     
-    root.mainloop()
+    def get_algorithm(algorithm):
+        file_path = filedialog.askopenfilename(filetypes=[("Text files", "*.txt")])
+        # Đọc bản đồ từ file
+        n, m, map_matrix = readInput(file_path)
+        #Tim diem bat dau va diem dich
+        start, goal = find_start_goal(map_matrix)
+        if algorithm == "bfs":
+            _, _, exploredSet = BFS(map_matrix, start, goal)
+            root = create_root("BFS") #Ham tao cua so Tkinter
+        elif algorithm == "dfs":
+            _, _, exploredSet = DFS(map_matrix, start, goal)
+            root = create_root("DFS")
+        elif algorithm == "ucs":
+            _, _, exploredSet = UCS(map_matrix, start, goal)
+            root = create_root("UCS")
+        elif algorithm == "astar":
+            _, _, exploredSet = Astar(map_matrix, start, goal)
+            root = create_root("A*")
+        elif algorithm == "gbfs":
+            _, _, exploredSet = GBFS(map_matrix, start, goal)
+            root = create_root("GBFS")
+        #Tim duong di
+        path = reconstructPath(exploredSet, start, goal, False)
+        #root = tk.Tk() #tao cua so Tkinter
+        #app = PathFinderApp(root, map_matrix, n, m, t, f)
+        app = PathFinderApp(root, map_matrix, n, m)
+        app.draw_path(path)
+        
+        root.mainloop()
 
 def create_screen():
     #Tạo cửa sổ
