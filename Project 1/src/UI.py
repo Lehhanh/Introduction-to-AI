@@ -60,8 +60,9 @@ class PathFinderApp:
         map_width = len(self.map_matrix[0])
         map_height = len(self.map_matrix)
         '''
-        self.canvas = tk.Canvas(root, width = m * 60, height = n * 60)
+        self.canvas = tk.Canvas(root, width = 600, height = 600)
         self.canvas.pack()
+        self.square_size = min(600 // len(map_matrix), 600 // len(map_matrix[0])) #kich thuoc o vuong
         self.draw_map(n, m)
 
     #Ve va to mau cac o trong map
@@ -73,6 +74,8 @@ class PathFinderApp:
                     color = "lightgreen"
                 elif self.map_matrix[row][col].startswith('G'):
                     color = "lightcoral"
+                elif self.map_matrix[row][col].startswith('F'):
+                    color = "lemonchiffon"
                 elif self.map_matrix[row][col].isdigit() and int(self.map_matrix[row][col]) > 0:
                     color = "lightblue"
                 elif self.map_matrix[row][col] == '-1':
@@ -80,36 +83,25 @@ class PathFinderApp:
                 elif self.map_matrix[row][col] == '0':
                     color = "white"
                 self.canvas.create_rectangle(
-                    col * 60,
-                    row * 60,
-                    (col + 1) * 60,
-                    (row + 1) * 60,
+                    col * self.square_size,
+                    row * self.square_size,
+                    (col + 1) * self.square_size,
+                    (row + 1) * self.square_size,
                     fill = color,
                     outline = "black"
                 )
                 # Ghi chu S va G vao o bat dau va o ket thuc
-                if self.map_matrix[row][col].startswith('S') or self.map_matrix[row][col].startswith('G') or (self.map_matrix[row][col].isdigit() and int(self.map_matrix[row][col]) > 0):
-                    self.canvas.create_text(col * 60 + 60 / 2, row * 60 + 60 / 2, text = self.map_matrix[row][col], fill = "black", font = ("Helvetica", 16, "bold"))
+                if self.map_matrix[row][col].startswith('S') or self.map_matrix[row][col].startswith('G') or self.map_matrix[row][col].startswith('F') or (self.map_matrix[row][col].isdigit() and int(self.map_matrix[row][col]) > 0):
+                    self.canvas.create_text(col * self.square_size + self.square_size / 2, row * self.square_size + self.square_size / 2, text = self.map_matrix[row][col], fill = "black", font = ("Helvetica", 16, "bold"))
     
     #Ve duong di tim duoc
     def draw_path(self, path):
-        '''
-        for (row, col) in path:
-            self.canvas.create_rectangle(
-                col * self.square_size,
-                row * self.square_size,
-                (col + 1) * self.square_size,
-                (row + 1) * self.square_size,
-                fill="blue",
-                outline="black"
-            )
-        '''
         for i in range(len(path) - 1):
             row1, col1 = path[i]
             row2, col2 = path[i + 1]
             self.canvas.create_line(
-                col1 * 60 + 60 / 2, row1 * 60 + 60 / 2,
-                col2 * 60 + 60 / 2, row2 * 60 + 60 / 2,
+                col1 * self.square_size + self.square_size / 2, row1 * self.square_size + self.square_size / 2,
+                col2 * self.square_size + self.square_size / 2, row2 * self.square_size + self.square_size / 2,
                 fill= "red", width = 2
             )
 
