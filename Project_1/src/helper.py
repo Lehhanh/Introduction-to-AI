@@ -29,14 +29,26 @@ def createOutputFilepath(inputFilepath):
     return outputFilepath
 
 def writeOutput_level1(filepath, pathList):
-    pass
+    # Tạo đường dẫn tệp đầu ra
+    outputFilepath = createOutputFilepath(filepath)
+
+    # Tiêu đề cho từng thuật toán
+    titles = ["BFS", "DFS", "UCS", "A*", "GBFS"]
+    
+    # Mở tệp đầu ra để ghi
+    with open(outputFilepath, 'w') as file:
+        # Ghi từng đường đi với tiêu đề tương ứng
+        for idx, path in enumerate(pathList):
+            file.write(f"{titles[idx]}\n")
+            path_str = ', '.join(f"({x}, {y})" for x, y in path)
+            file.write(path_str + '\n')
 
 def writeOutput(filepath, path):
     f = open(filepath, 'w')
     for i in range (0, len(path)):
         f.write(str(path[i]))
         if i < len(path) - 1:
-            f.write(' ')
+            f.write(', ')
     f.close()
 
 def findPosition(map, value):
