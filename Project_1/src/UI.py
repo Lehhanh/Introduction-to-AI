@@ -178,28 +178,28 @@ def level1_bfs(n, m, map_matrix, pathList):
     root.mainloop()
     
 def level1_dfs(n, m, map_matrix, pathList):
-    root = create_root("BFS") #Ham tao cua so Tkinter
+    root = create_root("DFS") #Ham tao cua so Tkinter
     app = PathFinderApp(root, map_matrix, n, m)
     app.draw_path(pathList[1])
         
     root.mainloop()
     
 def level1_ucs(n, m, map_matrix, pathList):
-    root = create_root("BFS") #Ham tao cua so Tkinter
+    root = create_root("UCS") #Ham tao cua so Tkinter
     app = PathFinderApp(root, map_matrix, n, m)
     app.draw_path(pathList[2])
         
     root.mainloop()
     
 def level1_astar(n, m, map_matrix, pathList):
-    root = create_root("BFS") #Ham tao cua so Tkinter
+    root = create_root("A*") #Ham tao cua so Tkinter
     app = PathFinderApp(root, map_matrix, n, m)
     app.draw_path(pathList[3])
         
     root.mainloop()
     
 def level1_gbfs(n, m, map_matrix, pathList):
-    root = create_root("BFS") #Ham tao cua so Tkinter
+    root = create_root("GBFS") #Ham tao cua so Tkinter
     app = PathFinderApp(root, map_matrix, n, m)
     app.draw_path(pathList[4])
         
