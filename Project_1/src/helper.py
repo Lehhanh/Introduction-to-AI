@@ -43,8 +43,11 @@ def writeOutput_level1(filepath, pathList):
             path_str = ', '.join(f"({x}, {y})" for x, y in path)
             file.write(path_str + '\n')
 
+
+
 def writeOutput(filepath, path):
-    f = open(filepath, 'w')
+    outputFilepath = createOutputFilepath(filepath)
+    f = open(outputFilepath, 'w')
     for i in range (0, len(path)):
         f.write(str(path[i]))
         if i < len(path) - 1:
