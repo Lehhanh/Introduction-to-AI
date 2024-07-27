@@ -22,14 +22,16 @@ def readInput(filepath, level):
     return row, col, map
 
 def createOutputFilepath(inputFilepath):
-    i = inputFilepath.index('_')
-    if i == -1:
+    underscore_index = inputFilepath.rindex('_')
+    slash_index = inputFilepath.rindex('/')
+    if underscore_index == -1 or slash_index == -1:
         return ''
-    outputFilepath = 'output' + inputFilepath[i - 1:]
+    outputFilepath = inputFilepath[:slash_index] + inputFilepath[slash_index:].replace('input', 'output')
     return outputFilepath
 
 def writeOutput_level1(filepath, pathList):
     # Tạo đường dẫn tệp đầu ra
+    print('File input: ', filepath)
     outputFilepath = createOutputFilepath(filepath)
 
     # Tiêu đề cho từng thuật toán
@@ -44,7 +46,8 @@ def writeOutput_level1(filepath, pathList):
             file.write(path_str + '\n')
 
 def writeOutput(filepath, path):
-    f = open(filepath, 'w')
+    outputFilepath = createOutputFilepath(filepath)
+    f = open(outputFilepath, 'w')
     for i in range (0, len(path)):
         f.write(str(path[i]))
         if i < len(path) - 1:
