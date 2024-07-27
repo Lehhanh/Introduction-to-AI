@@ -236,7 +236,7 @@ def algorithm(start_label, level1_button, level2_button, level3_button, level4_b
     GBFS_button = tk.Button(root, text="GBFS", width=8, height=3, command=lambda: level1_gbfs(), bg="Orange", fg="Black")
     GBFS_button.grid(row=5, column=0, padx=(window_width/2.5 + 50), pady=5)   
     
-    return_button = tk.Button(root, text="Return", width=8, height=3, command=lambda: return_start(start1_label, BFS_button, UCS_button, Astar_button, GBFS_button, return_button, root), bg="Orange", fg="Black")
+    return_button = tk.Button(root, text="Back", width=8, height=3, command=lambda: return_start(start1_label, BFS_button, UCS_button, Astar_button, GBFS_button, return_button, root), bg="Orange", fg="Black")
     return_button.grid(row=6, column=0, padx=(window_width/2.5 + 50), pady=5)   
 
 def level1_bfs():
@@ -259,7 +259,7 @@ def level1_gbfs():
     algorithm =  "gbfs"
     get_algorithm(algorithm)
     
- def get_algorithm(algorithm):
+def get_algorithm(algorithm):
     file_path = filedialog.askopenfilename(filetypes=[("Text files", "*.txt")])
     # Đọc bản đồ từ file
     n, m, map_matrix = readInput(file_path)
