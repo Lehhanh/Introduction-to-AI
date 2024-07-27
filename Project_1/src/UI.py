@@ -145,6 +145,7 @@ def algorithm(start_label, level1_button, level2_button, level3_button, level4_b
     # Đọc bản đồ từ file
     n, m, map_matrix = readInput(file_path, 1)
     pathList = pathFinding_level1(map_matrix)
+    writeOutput_level1(file_path, pathList)
     
     start1_label = tk.Label(root, text="Select algorithm", font=("Arial", 24, "bold italic"), fg="Black")
     start1_label.config(bg=root.cget('bg'),  # Đặt màu nền của Label giống với màu nền của cửa sổ
@@ -209,6 +210,7 @@ def level2():
     # Đọc bản đồ từ file
     n, m, map_matrix, t = readInput(file_path, 2)
     path = pathFinding_level2(map_matrix, t)
+    writeOutput(file_path, path)
     root = create_root("Level 2") #Ham tao cua so Tkinter
     app = PathFinderApp(root, map_matrix, n, m)
     app.draw_path(path)
@@ -220,6 +222,7 @@ def level3():
     # Đọc bản đồ từ file
     n, m, map_matrix, t, f = readInput(file_path, 3)
     path = pathFinding_level3(map_matrix, t, f)
+    writeOutput(file_path, path)
     root = create_root("Level 3") #Ham tao cua so Tkinter
     app = PathFinderApp(root, map_matrix, n, m)
     app.draw_path(path)
