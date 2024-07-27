@@ -120,7 +120,7 @@ def start_game(start_button, title_label, root):
     start_label.grid(row=0, column=0, columnspan=2, padx=window_width/2.5, pady=window_height/7)
 
     #các nút level
-    level1_button = tk.Button(root, text="Level1", width=10, height=3, command= lambda: algorithm(start_label, level1_button, level2_button, level3_button, level4_button, root), bg="Orange", fg="Black")
+    level1_button = tk.Button(root, text="Level1", width=10, height=3, command= lambda: algorithm(start_label, level1_button, level2_button, level3_button, root), bg="Orange", fg="Black")
     level1_button.grid(row=1, column=0, padx=(window_width/2.5 + 50), pady=5)
 
     level2_button = tk.Button(root, text="Level2", width=10, height=3, command=level2, bg="Orange", fg="Black")
@@ -129,17 +129,14 @@ def start_game(start_button, title_label, root):
     level3_button = tk.Button(root, text="Level3", width=10, height=3, command=level3, bg="Orange", fg="Black")
     level3_button.grid(row=3, column=0, padx=(window_width/2.5 + 50), pady=5)
 
-    level4_button = tk.Button(root, text="Level4", width=10, height=3, command=level4, bg="Orange", fg="Black")
-    level4_button.grid(row=4, column=0, padx=(window_width/2.5 + 50), pady=5)
 
 
-def algorithm(start_label, level1_button, level2_button, level3_button, level4_button, root):
+def algorithm(start_label, level1_button, level2_button, level3_button, root):
     #Dừng các nút
     start_label.grid_forget()
     level1_button.grid_forget()
     level2_button.grid_forget()
     level3_button.grid_forget()
-    level4_button.grid_forget()
     
     file_path = filedialog.askopenfilename(filetypes=[("Text files", "*.txt")])
     # Đọc bản đồ từ file
@@ -167,7 +164,7 @@ def algorithm(start_label, level1_button, level2_button, level3_button, level4_b
     GBFS_button = tk.Button(root, text="GBFS", width=8, height=3, command=lambda: level1_gbfs(n, m, map_matrix, pathList), bg="Orange", fg="Black")
     GBFS_button.grid(row=5, column=0, padx=(window_width/2.5 + 50), pady=5)   
     
-    return_button = tk.Button(root, text="Return", width=8, height=3, command=lambda: return_start(start1_label, BFS_button, UCS_button, Astar_button, GBFS_button, return_button, root), bg="Orange", fg="Black")
+    return_button = tk.Button(root, text="Back", width=8, height=3, command=lambda: return_start(start1_label, BFS_button, UCS_button, Astar_button, GBFS_button, return_button, root), bg="Orange", fg="Black")
     return_button.grid(row=6, column=0, padx=(window_width/2.5 + 50), pady=5)   
 
 def level1_bfs(n, m, map_matrix, pathList):
@@ -244,7 +241,7 @@ def return_start(start1_label, BFS_button, UCS_button, Astar_button, GBFS_button
     start_label.grid(row=0, column=0, columnspan=2, padx=window_width/2.5, pady=window_height/7)
 
     #các nút level
-    level1_button = tk.Button(root, text="Level1", width=10, height=3, command= lambda: algorithm(start_label, level1_button, level2_button, level3_button, level4_button, root), bg="Orange", fg="Black")
+    level1_button = tk.Button(root, text="Level1", width=10, height=3, command= lambda: algorithm(start_label, level1_button, level2_button, level3_button, root), bg="Orange", fg="Black")
     level1_button.grid(row=1, column=0, padx=(window_width/2.5 + 50), pady=5)
 
     level2_button = tk.Button(root, text="Level2", width=10, height=3, command= lambda: level2(), bg="Orange", fg="Black")
@@ -253,5 +250,3 @@ def return_start(start1_label, BFS_button, UCS_button, Astar_button, GBFS_button
     level3_button = tk.Button(root, text="Level3", width=10, height=3, command= lambda: level3(), bg="Orange", fg="Black")
     level3_button.grid(row=3, column=0, padx=(window_width/2.5 + 50), pady=5)
 
-    level4_button = tk.Button(root, text="Level4", width=10, height=3, command=level4, bg="Orange", fg="Black")
-    level4_button.grid(row=4, column=0, padx=(window_width/2.5 + 50), pady=5)
