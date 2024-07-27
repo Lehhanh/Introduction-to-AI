@@ -5,6 +5,7 @@ from level_2 import*
 from level_3 import*
 from Node import*
 from tkinter import filedialog
+from tkinter import messagebox
 from PIL import ImageTk, Image
 
 window_width = 1000 
@@ -129,7 +130,8 @@ def start_game(start_button, title_label, root):
     level3_button = tk.Button(root, text="Level3", width=10, height=3, command=level3, bg="Orange", fg="Black")
     level3_button.grid(row=3, column=0, padx=(window_width/2.5 + 50), pady=5)
 
-
+def showNoPathFound():
+    messagebox.showinfo("No Path Found", "No Path Found!")
 
 def algorithm(start_label, level1_button, level2_button, level3_button, root):
     #Dừng các nút
@@ -170,61 +172,86 @@ def algorithm(start_label, level1_button, level2_button, level3_button, root):
 def level1_bfs(n, m, map_matrix, pathList):
     root = create_root("BFS") #Ham tao cua so Tkinter
     app = PathFinderApp(root, map_matrix, n, m)
-    app.draw_path(pathList[0])
-        
-    root.mainloop()
+    if len(pathList[0]) == 0:
+        showNoPathFound()
+    else:
+        app.draw_path(pathList[0])
+            
+        root.mainloop()
     
 def level1_dfs(n, m, map_matrix, pathList):
     root = create_root("DFS") #Ham tao cua so Tkinter
     app = PathFinderApp(root, map_matrix, n, m)
-    app.draw_path(pathList[1])
-        
-    root.mainloop()
+    if len(pathList[1]) == 0:
+        showNoPathFound()
+    else:
+        app.draw_path(pathList[1])
+            
+        root.mainloop()
     
 def level1_ucs(n, m, map_matrix, pathList):
     root = create_root("UCS") #Ham tao cua so Tkinter
     app = PathFinderApp(root, map_matrix, n, m)
-    app.draw_path(pathList[2])
-        
-    root.mainloop()
+    if len(pathList[2]) == 0:
+        showNoPathFound()
+    else:
+        app.draw_path(pathList[2])
+            
+        root.mainloop()
     
 def level1_astar(n, m, map_matrix, pathList):
     root = create_root("A*") #Ham tao cua so Tkinter
     app = PathFinderApp(root, map_matrix, n, m)
-    app.draw_path(pathList[3])
-        
-    root.mainloop()
+    if len(pathList[3]) == 0:
+        showNoPathFound()
+    else:
+        app.draw_path(pathList[3])
+            
+        root.mainloop()
     
 def level1_gbfs(n, m, map_matrix, pathList):
     root = create_root("GBFS") #Ham tao cua so Tkinter
     app = PathFinderApp(root, map_matrix, n, m)
-    app.draw_path(pathList[4])
-        
-    root.mainloop()
+    if len(pathList[4]) == 0:
+        showNoPathFound()
+    else:
+        app.draw_path(pathList[4])
+            
+        root.mainloop()
 
 def level2():
     file_path = filedialog.askopenfilename(filetypes=[("Text files", "*.txt")])
     # Đọc bản đồ từ file
     n, m, map_matrix, t = readInput(file_path, 2)
     path = pathFinding_level2(map_matrix, t)
-    writeOutput(file_path, path)
-    root = create_root("Level 2") #Ham tao cua so Tkinter
-    app = PathFinderApp(root, map_matrix, n, m)
-    app.draw_path(path)
-        
-    root.mainloop()
+    if len(path) == 0:
+        root = create_root("Level 2") #Ham tao cua so Tkinter
+        app = PathFinderApp(root, map_matrix, n, m)
+        showNoPathFound()
+    else: 
+        writeOutput(file_path, path)
+        root = create_root("Level 2") #Ham tao cua so Tkinter
+        app = PathFinderApp(root, map_matrix, n, m)
+        app.draw_path(path)
+            
+        root.mainloop()
 
 def level3():
     file_path = filedialog.askopenfilename(filetypes=[("Text files", "*.txt")])
     # Đọc bản đồ từ file
     n, m, map_matrix, t, f = readInput(file_path, 3)
     path = pathFinding_level3(map_matrix, t, f)
-    writeOutput(file_path, path)
-    root = create_root("Level 3") #Ham tao cua so Tkinter
-    app = PathFinderApp(root, map_matrix, n, m)
-    app.draw_path(path)
-        
-    root.mainloop()
+    if len(path) == 0:
+        root = create_root("Level 3") #Ham tao cua so Tkinter
+        app = PathFinderApp(root, map_matrix, n, m)
+        showNoPathFound()
+    else: 
+        writeOutput(file_path, path)
+        root = create_root("Level 3") #Ham tao cua so Tkinter
+        app = PathFinderApp(root, map_matrix, n, m)
+        app.draw_path(path)
+            
+        root.mainloop()
 
 
 def return_start(start1_label, BFS_button, UCS_button, Astar_button, GBFS_button, return_button, root):
