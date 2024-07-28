@@ -3,17 +3,17 @@ from Node import *
 from helper import *
 from level_1 import *
 
-def searchAlgorithm_level2(map, startPos, goalPos, t):
+def searchAlgorithm_level2(map, startPos, goalPos, time_limit):
     frontier = [Node(startPos, None, 0, heuristic(startPos, goalPos))]
     exploredSet = []
     while len(frontier) > 0:
         frontier.sort(key=lambda n: n.delivery_time + n.h_cost)
         currentNode = frontier.pop(0)
         exploredSet.append(currentNode)
+        if currentNode.delivery_time > time_limit:
+            break
         if currentNode.position == goalPos:
             return True, frontier, exploredSet
-        if currentNode.delivery_time > t:
-            break
         neighborPos = currentNode.getNeighborPos(map)
         for neighbor in neighborPos:
             if neighbor not in [n.position for n in exploredSet]:
@@ -30,10 +30,11 @@ def searchAlgorithm_level2(map, startPos, goalPos, t):
     return False, frontier, exploredSet
 
 
-def pathFinding_level2(map, t):
+def pathFinding_level2(map, time_limit):
     startPos = findPosition(map, 'S')[0]
     goalPos = findPosition(map, 'G')[0]
-    isSuccess, frontier, exploredSet = searchAlgorithm_level2(map, startPos, goalPos, t)
+    path = []
+    isSuccess, frontier, exploredSet = searchAlgorithm_level2(map, startPos, goalPos, time_limit)
     if isSuccess:
         path = reconstructPath(exploredSet, startPos, goalPos, True)
     return path

@@ -3,16 +3,16 @@ from Node import *
 from helper import *
 from level_2 import *
 
-def searchAlgorithm_level3(map, startPos, goalPos, time_limit, fuel_limit):
+def searchAlgorithm_level3(map, start, goalPos, time_limit, fuel_limit):
     if time_limit <= 0:
         return False, []
-    isSuccess, frontier, exploredSet = searchAlgorithm_level2(map, startPos, goalPos, time_limit)
+    isSuccess, frontier, exploredSet = searchAlgorithm_level2(map, start, goalPos, time_limit)
     if isSuccess:
-        path = reconstructPath(exploredSet, startPos, goalPos, True)
+        path = reconstructPath(exploredSet, start, goalPos, True)
         if len(path) - 1 <= fuel_limit:
             return True, path
     # find all fuel station within fuel limit and time limit
-    f_list, f_path = findFuelStation(map, startPos, goalPos, fuel_limit, time_limit)
+    f_list, f_path = findFuelStation(map, start, goalPos, fuel_limit, time_limit)
     if len(f_list) == 0:
         return False, []
     for i in range(0, len(f_list)):
@@ -61,8 +61,8 @@ def findFuelStation(map, s, g, fuel_limit, time_limit):
     return [], []
 
 
-def pathFinding_level3(map, t, f):
+def pathFinding_level3(map, time_limit, fuel_limit):
     startPos = findPosition(map, 'S')[0]
     goalPos = findPosition(map, 'G')[0]
-    isSuccess, path = searchAlgorithm_level3(map, startPos, goalPos, t, f)
+    isSuccess, path = searchAlgorithm_level3(map, startPos, goalPos, time_limit, fuel_limit)
     return path

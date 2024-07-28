@@ -1,6 +1,5 @@
 from Node import *
 import numpy as np
-#from UI import*
 
 def readInput(filepath, level):
     map = []
