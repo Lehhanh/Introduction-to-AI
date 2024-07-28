@@ -45,8 +45,9 @@ def findFuelStation(map, s, g, fuel_limit, time_limit):
                 new_d_time = currentNode.delivery_time + 1
                 if map[currentNode.position].isnumeric():
                     new_d_time += int(map[currentNode.position])
-                if neighbor not in [n.position for n in f] and new_d_time + heuristic(neighbor, g) <= time_limit:
-                    f.append(Node(neighbor, currentNode.position, currentNode.g_cost + 1, heuristic(neighbor, g), new_d_time, currentNode.remain_fuel - 1))
+                if neighbor not in [n.position for n in f]:
+                    if new_d_time + heuristic(neighbor, g) <= time_limit:
+                        f.append(Node(neighbor, currentNode.position, currentNode.g_cost + 1, heuristic(neighbor, g), new_d_time, currentNode.remain_fuel - 1))
                 else:
                     index = [n.position for n in f].index(neighbor)
                     if new_d_time < f[index].delivery_time:
