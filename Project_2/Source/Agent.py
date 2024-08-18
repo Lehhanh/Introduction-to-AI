@@ -269,7 +269,7 @@ class Agent:
                 self.move_back(next_cell.parent_cell)
             self.move_adj_cell(next_cell.position)
         self.move_back((1, 1))
-        self.point -= 10
+        self.point += 10
         self.interface.fileOut.write(f'{str(self.current_cell)}: CLIMB: {str(self.direction)}: {str(self.health)}: {str(self.point)}: {self.hp}\n')
 
 
