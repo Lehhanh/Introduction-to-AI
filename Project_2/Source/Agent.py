@@ -103,7 +103,7 @@ class Agent:
                 for n1 in neighbor1:
                     temp1.add(symbols(f'S{n1[0]}{n1[1]}'))
                 self.KB.add(Equivalent(symbols(f'W{n[0]}{n[1]}'), And(*temp1)))
-            self.KB.add(Or(*temp))
+            self.KB.add(Equivalent(symbols(f'S{self.current_cell[0]}{self.current_cell[1]}'), Or(*temp)))
         else:
             self.KB.add(Not(symbols(f'S{self.current_cell[0]}{self.current_cell[1]}')))
             for n in neighbor:
@@ -118,7 +118,7 @@ class Agent:
                 for n1 in neighbor1:
                     temp1.add(symbols(f'B{n1[0]}{n1[1]}'))
                 self.KB.add(Equivalent(symbols(f'P{n[0]}{n[1]}'), And(*temp1)))
-            self.KB.add(Or(*temp))
+            self.KB.add(Equivalent(symbols(f'B{self.current_cell[0]}{self.current_cell[1]}'), Or(*temp)))
         else:
             self.KB.add(Not(symbols(f'B{self.current_cell[0]}{self.current_cell[1]}')))
             for n in neighbor:
@@ -213,6 +213,10 @@ class Agent:
         self.point -= 100
         self.interface.fileOut.write(f'{str(self.current_cell)}: SHOOT: {str(self.direction)}: {str(self.health)}: {str(self.point)}: {self.hp}\n')
         scream = self.interface.shoot(cell)
+        self.KB.add(Not(symbols(f'W{cell[0]}{cell[1]}')))
+        neighbors = self.get_neighbors_agent(cell)
+        for n in neighbors:
+            self.KB.add(Not(symbols(f'S{cell[0]}{cell[1]}')))
         return scream
     def move_adj_cell(self, next_cell):
         self.turn(next_cell)
@@ -236,9 +240,9 @@ class Agent:
             self.visited_cell.append(Cell(self.current_cell, self.parent_cell))
             neighbors = list(set(self.get_neighbors_agent(self.current_cell)).difference([c.position for c in self.visited_cell]))
             neighbors.reverse()
-            percepts = self.interface.get_percept(self.current_cell)
             safe_neighbors = []
             for n in neighbors:
+                percepts = self.interface.get_percept(self.current_cell)
                 wumpus = False
                 pit = False
                 if 'S' in percepts:
@@ -251,12 +255,15 @@ class Agent:
                 if wumpus == False and pit == False:
                     safe_neighbors.append(Cell(n, self.current_cell))
             queue += safe_neighbors
+            # queue += list(set(safe_neighbors)-set(queue))
             print('safe: ', [c.position for c in safe_neighbors])
             print('queue: ', [c.position for c in queue])
             if len(queue) == 0:
                 print('Empty queue')
                 break
             next_cell = queue.pop()
+            while next_cell in [c.position for c in self.visited_cell]:
+                next_cell = queue.pop()
             print(next_cell.position)
             if next_cell.parent_cell != self.current_cell:
                 self.move_back(next_cell.parent_cell)
@@ -266,7 +273,7 @@ class Agent:
         self.interface.fileOut.write(f'{str(self.current_cell)}: CLIMB: {str(self.direction)}: {str(self.health)}: {str(self.point)}: {self.hp}\n')
 
 
-i = Interface('test.txt', 'result1.txt')
+i = Interface('map1.txt', 'result1.txt')
 a = Agent(i) 
 a.explore_world()
             
