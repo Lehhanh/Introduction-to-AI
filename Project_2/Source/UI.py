@@ -438,11 +438,3 @@ def read_output_file(filename):
                 results.append(((x, y), action, direction, health, points))
 
         return results
-
-file_path = open_file_dialog()
-i = Interface(file_path, 'result1.txt')
-a = Agent(i) 
-a.explore_world()
-app = WumpusWorldApp(file_path, "result1.txt")
-app.run()
-#position, action, direction, health, points = read_output_file("result1.txt")
