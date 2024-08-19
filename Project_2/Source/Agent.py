@@ -81,7 +81,7 @@ class Agent:
             self.interface.fileOut.write(f'{str(self.current_cell)}: GRAB_GOLD: {str(self.direction)}: {str(self.health)}: {str(self.point)}: {self.hp}\n')
         if 'P_G' in percept:
             self.health -= 25
-            if self.health == 0:
+            if self.health <= 0:
                 self.is_alive = False
                 return
             if self.health == 25 and self.hp > 0:
@@ -234,7 +234,10 @@ class Agent:
         self.move_adj_cell(path[1])
         for i in range (2, len(path)):
             self.update_agent()
+            if self.is_alive == False:
+                return False
             self.move_adj_cell(path[i])
+        return True
     def is_adj_cell(self, cell1, cell2):
         temp = tuple([a-b for a, b in zip(cell1, cell2)])
         if temp == (1, 0) or temp == (0, 1) or temp == (-1, 0) or temp == (0, -1):
@@ -298,10 +301,11 @@ class Agent:
                 self.move_back(temp)
             self.move_adj_cell(next_cell)
         if self.is_alive == True:
-            self.move_back((1, 1))
-            self.point += 10
-            self.interface.fileOut.write(f'{str(self.current_cell)}: CLIMB: {str(self.direction)}: {str(self.health)}: {str(self.point)}: {self.hp}\n')
-        else:
+            isSuccess = self.move_back((1, 1))
+            if isSuccess:
+                self.point += 10
+                self.interface.fileOut.write(f'{str(self.current_cell)}: CLIMB: {str(self.direction)}: {str(self.health)}: {str(self.point)}: {self.hp}\n')
+        if self.is_alive == False:
             print('Agent is dead')
         self.interface.fileOut.close()
 
