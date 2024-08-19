@@ -35,6 +35,9 @@ direction_turn = {
     ('W', 'TURN_LEFT'): 'S'
 }
 
+def heuristic(src, des):
+    return abs(src[0] - des[0]) + abs(src[0] - des[0])
+
 class Agent:
     def __init__(self, interface):
         self.point = 0
@@ -77,20 +80,25 @@ class Agent:
             self.interface.grab_gold(self.current_cell)
             self.interface.fileOut.write(f'{str(self.current_cell)}: GRAB_GOLD: {str(self.direction)}: {str(self.health)}: {str(self.point)}: {self.hp}\n')
         if 'P_G' in percept:
-            self.health = self.health - 25
-            if self.health <= 0:
-                if self.hp == 0:
-                    self.is_alive = False
-                else:
-                    self.hp -= 1
-                    self.point -= 10
-                    self.health += 25
-                    self.interface.fileOut.write(f'{str(self.current_cell)}: HEAL: {str(self.direction)}: {str(self.health)}: {str(self.point)}: {self.hp}\n')
+            self.health -= 25
+            if self.health == 0:
+                self.is_alive = False
+                return
+            if self.health == 25 and self.hp > 0:
+                self.hp -= 1
+                self.point -= 10
+                self.health += 25
+                self.interface.fileOut.write(f'{str(self.current_cell)}: HEAL: {str(self.direction)}: {str(self.health)}: {str(self.point)}: {self.hp}\n')
         if 'H_P' in percept:
             self.point -= 10
             self.hp += 1
             self.interface.grab_hp(self.current_cell)
             self.interface.fileOut.write(f'{str(self.current_cell)}: GRAB_HP: {str(self.direction)}: {str(self.health)}: {str(self.point)}: {self.hp}\n')
+            if self.health <= 25:
+                self.hp -= 1
+                self.point -= 10
+                self.health += 25
+                self.interface.fileOut.write(f'{str(self.current_cell)}: HEAL: {str(self.direction)}: {str(self.health)}: {str(self.point)}: {self.hp}\n')
         if 'S' in percept:
             self.KB.add(symbols(f'S{self.current_cell[0]}{self.current_cell[1]}'))
             temp = set()
@@ -155,8 +163,6 @@ class Agent:
     def check_safe(self, cell):
         return self.check_wumpus(cell) == False and self.check_pit(cell) == False
     def find_shortest_path(self, src_cell, des_cell):
-        def heuristic(src, des):
-            return abs(src[0] - des[0]) + abs(src[0] - des[0])
         def reconstructPath(explored, src_cell, des_cell):
             path = []
             i = len(explored) - 1
@@ -225,7 +231,8 @@ class Agent:
     def move_back(self, des_cell):
         isSucess, path = self.find_shortest_path(self.current_cell, des_cell)
         print('path: ', path)
-        for i in range (1, len(path)):
+        self.move_adj_cell(path[1])
+        for i in range (2, len(path)):
             self.update_agent()
             self.move_adj_cell(path[i])
     def is_adj_cell(self, cell1, cell2):
@@ -243,7 +250,7 @@ class Agent:
             # agent get percepts and add KB in this cell
             self.update_agent()
             # check if agent died
-            if not self.is_alive:
+            if self.is_alive == False:
                 print('Agent is dead')
                 break
             # mark as visited cell
@@ -254,7 +261,6 @@ class Agent:
             for n in temp:
                 if n not in self.visited_cell:
                     neighbors.append(n)
-            neighbors.reverse()
             # check safe cells
             safe_neighbors = []
             for n in neighbors:
@@ -263,7 +269,7 @@ class Agent:
                 pit = False
                 if 'S' in percepts:
                     wumpus = self.check_wumpus(n)
-                    if wumpus:
+                    if wumpus == True:
                         scream = self.shoot_wumpus(n)
                         wumpus = False
                 if 'B' in percepts:
@@ -271,6 +277,7 @@ class Agent:
                 if wumpus == False and pit == False:
                     safe_neighbors.append(n)
             # add all safe cells to queue
+            safe_neighbors.reverse()
             for n in safe_neighbors:
                 if n in queue:
                     queue.remove(n)
@@ -290,11 +297,14 @@ class Agent:
                         temp = self.visited_cell[i]
                 self.move_back(temp)
             self.move_adj_cell(next_cell)
-        self.move_back((1, 1))
-        self.point += 10
-        self.interface.fileOut.write(f'{str(self.current_cell)}: CLIMB: {str(self.direction)}: {str(self.health)}: {str(self.point)}: {self.hp}\n')
+        if self.is_alive == True:
+            self.move_back((1, 1))
+            self.point += 10
+            self.interface.fileOut.write(f'{str(self.current_cell)}: CLIMB: {str(self.direction)}: {str(self.health)}: {str(self.point)}: {self.hp}\n')
+        else:
+            print('Agent is dead')
         self.interface.fileOut.close()
 
-# i = Interface('map1.txt', 'result1.txt')
+# i = Interface('map4.txt', 'result1.txt')
 # a = Agent(i) 
 # a.explore_world()
