@@ -37,8 +37,9 @@ from sympy import*
 # print('W22 va ~W22')
 # print(not satisfiable(And(*KB, Not(symbols('W22')))))
 # print(not satisfiable(And(*KB, symbols('W22'))))
-a = [1, 2, 3,4, 5]
-b = [4, 7, 2, 11]
-c = list(set(a) & set(b))
-a = list(set(a) - (set(a)&set(b)))
-print(a)
+temp = [(1, 1), (1, 2)]
+l = [(1, 1), (5, 4), (3, 2), (1, 2)]
+for t in temp:
+    if t in l:
+        l.remove(t)
+print(l)

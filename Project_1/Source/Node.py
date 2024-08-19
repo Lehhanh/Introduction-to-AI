@@ -17,7 +17,7 @@ class Node:
         self.f_cost = g_cost + h_cost
 
     def getNeighborPos(self, map):
-        directions = [(0, 1), (1, 0), (0, -1), (-1, 0)] #Right, Down, Left, Up
+        directions = [ (0, -1), (-1, 0), (0, 1), (1, 0)] #Right, Down, Left, Up
         neighbors = []
         for d in directions:
             newPos = tuple([a+b for a, b in zip(self.position, d)])

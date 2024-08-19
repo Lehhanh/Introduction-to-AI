@@ -59,7 +59,7 @@ class Agent:
                 neighbors.append(neighbor)
         return neighbors
     def update_agent(self):
-        neighbor = list(set(self.get_neighbors_agent(self.current_cell)).difference([c.position for c in self.visited_cell]))
+        neighbor = list(set(self.get_neighbors_agent(self.current_cell)).difference(self.visited_cell))
         percept = self.interface.get_percept(self.current_cell)
         if 'W' in percept:
             self.point -= 10000
@@ -172,7 +172,7 @@ class Agent:
             frontier.sort(key=lambda c: c.h_cost)
             cell = frontier.pop(0)
             explored.append(cell)
-            neighbors = list(set(self.get_neighbors_agent(cell.position)).intersection([c.position for c in self.visited_cell]))
+            neighbors = list(set(self.get_neighbors_agent(cell.position)).intersection(self.visited_cell))
             for neighbor in neighbors:
                 if neighbor == des_cell:
                     return True, reconstructPath(explored, src_cell, des_cell)
@@ -227,22 +227,34 @@ class Agent:
         for i in range (1, len(path)):
             self.update_agent()
             self.move_adj_cell(path[i])
+    def is_adj_cell(self, cell1, cell2):
+        temp = tuple([a-b for a, b in zip(cell1, cell2)])
+        if temp == (1, 0) or temp == (0, 1) or temp == (-1, 0) or temp == (0, -1):
+            return True
+        return False
     def explore_world(self):
+        # queue of safe cells
         queue = []
+
+        # explore the map untill agent die or no more safe cells
         while self.is_alive:
             print(self.current_cell, self.direction)
+            # agent get percepts and add KB in this cell
             self.update_agent()
+            # check if agent died
             if not self.is_alive:
                 print('Agent is dead')
                 break
-            self.visited_cell.append(Cell(self.current_cell, self.parent_cell))
-            # neighbors = list(set(self.get_neighbors_agent(self.current_cell)).difference([c.position for c in self.visited_cell]))
+            # mark as visited cell
+            self.visited_cell.append(self.current_cell)
+            # get neighbor cell that is not in visited list
             temp = self.get_neighbors_agent(self.current_cell)
             neighbors = []
             for n in temp:
-                if n not in [c.position for c in self.visited_cell]:
+                if n not in self.visited_cell:
                     neighbors.append(n)
             neighbors.reverse()
+            # check safe cells
             safe_neighbors = []
             for n in neighbors:
                 percepts = self.interface.get_percept(self.current_cell)
@@ -256,37 +268,32 @@ class Agent:
                 if 'B' in percepts:
                     pit = self.check_pit(n)
                 if wumpus == False and pit == False:
-                    safe_neighbors.append(Cell(n, self.current_cell))
+                    safe_neighbors.append(n)
+            # add all safe cells to queue
+            for n in safe_neighbors:
+                if n in queue:
+                    queue.remove(n)
             queue += safe_neighbors
-            print('safe: ', [c.position for c in safe_neighbors])
+            print('safe: ', safe_neighbors)
+            # check if no more safe cell
             if len(queue) == 0:
                 print('Empty queue')
                 break
             next_cell = queue.pop()
-            while next_cell in [c.position for c in self.visited_cell]:
+            while next_cell in self.visited_cell:
                 next_cell = queue.pop()
-            if next_cell.parent_cell != self.current_cell:
-                self.move_back(next_cell.parent_cell)
-            self.move_adj_cell(next_cell.position)
+            temp = (1, 1)
+            if not self.is_adj_cell(self.current_cell, next_cell):
+                for i in range(len(self.visited_cell) - 1, -1 , -1):
+                    if self.is_adj_cell(next_cell, self.visited_cell[i]):
+                        temp = self.visited_cell[i]
+                self.move_back(temp)
+            self.move_adj_cell(next_cell)
         self.move_back((1, 1))
         self.point += 10
         self.interface.fileOut.write(f'{str(self.current_cell)}: CLIMB: {str(self.direction)}: {str(self.health)}: {str(self.point)}: {self.hp}\n')
         self.interface.fileOut.close()
 
-
 i = Interface('map1.txt', 'result1.txt')
 a = Agent(i) 
 a.explore_world()
-            
-            
-            
-
-                    
-
-            
-        
-
-
-
-            
-        
