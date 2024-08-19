@@ -2,7 +2,7 @@ import pygame
 import tkinter as tk
 from tkinter import filedialog
 import sys
-
+from Agent import *
 class WumpusWorldApp:
     def __init__(self, input_file_path=None, output_file_path="output.txt"):
         pygame.init()
@@ -431,7 +431,7 @@ def read_output_file(filename):
                 position_str = parts[0].strip('()')
                 action = parts[1].strip()
                 direction = parts[2].strip()
-                health = int(parts[3].strip())
+                health = float(parts[3].strip())
                 points = int(parts[4].strip())
 
                 x, y = map(int, position_str.split(', '))
@@ -440,9 +440,9 @@ def read_output_file(filename):
         return results
 
 file_path = open_file_dialog()
-#i = Interface('test.txt', 'result1.txt')
-#a = Agent(i) 
-#a.explore_world()
+i = Interface(file_path, 'result1.txt')
+a = Agent(i) 
+a.explore_world()
 app = WumpusWorldApp(file_path, "result1.txt")
 app.run()
 #position, action, direction, health, points = read_output_file("result1.txt")
