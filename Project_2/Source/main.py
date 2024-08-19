@@ -1,15 +1,16 @@
-from sympy import*
-P11, W11 = symbols('P11 W11')
-B21 = symbols('B21')
-B12 = symbols('B12')
-P11, P22, P31 = symbols('P11 P22 P31')
-clause = set()
-clause.add(Not(P11))
-clause.add(Not(W11))
-clause.add(B21)
-clause.add(Or(P11, P22, P31))
-clause.add(B12)
-clause.add(Or(P11, P22))
-if symbols('W11') in clause:
-    print('co')
-res = not satisfiable(And(*clause, Not(P22)))
+from Agent import *
+from UI import *
+
+def main():
+    file_path = open_file_dialog()
+    i = Interface(file_path, 'result1.txt')
+    a = Agent(i) 
+
+    a.explore_world()
+
+    app = WumpusWorldApp(file_path, "result1.txt")
+    app.run()
+
+if __name__ == "__main__":
+    # Run the main function
+    main()

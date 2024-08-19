@@ -271,6 +271,7 @@ class Agent:
         self.move_back((1, 1))
         self.point += 10
         self.interface.fileOut.write(f'{str(self.current_cell)}: CLIMB: {str(self.direction)}: {str(self.health)}: {str(self.point)}: {self.hp}\n')
+        self.interface.fileOut.close()
 
 
 i = Interface('map1.txt', 'result1.txt')
