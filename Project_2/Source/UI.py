@@ -230,14 +230,6 @@ class WumpusWorldApp:
         start_text = font.render("Start", True, (255, 255, 255))
         self.screen.blit(start_text, (self.grid_size * self.cell_size + 65, self.screen_size[1] // 2 - 10))
 
-        # Draw file select button
-        file_button_color = (0, 0, 128)  # Dark Blue
-        self.file_button_rect = pygame.Rect(self.grid_size * self.cell_size + 50, self.screen_size[1] // 2 + 40, 100, 40)
-        pygame.draw.rect(self.screen, file_button_color, self.file_button_rect)
-        
-        file_text = font.render("Choose File", True, (255, 255, 255))
-        self.screen.blit(file_text, (self.grid_size * self.cell_size + 55, self.screen_size[1] // 2 + 50))
-
     def draw_message(self):
         font = pygame.font.Font(None, 36)
         current_time = pygame.time.get_ticks()
@@ -363,10 +355,6 @@ class WumpusWorldApp:
                     self.start_game = True
                     if self.input_file_path:
                         self.perform_actions()  # Call perform_actions when game starts
-                
-                # Check "Choose File" button
-                elif self.file_button_rect.collidepoint(mouse_x, mouse_y):
-                    self.choose_file()
 
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_UP:
@@ -381,20 +369,6 @@ class WumpusWorldApp:
                     self.rotate_agent('TURN_RIGHT')
                 elif event.key == pygame.K_l:
                     self.rotate_agent('TURN_LEFT')
-
-    def choose_file(self):
-        root = tk.Tk()
-        root.withdraw()  # Hide the root window
-        file_path = filedialog.askopenfilename(filetypes=[("Text files", "*.txt")])
-        if file_path:
-            self.input_file_path = file_path
-            self.grid_size, self.cell_size = self.calculate_grid_and_cell_size()
-            self.load_grid(self.input_file_path)
-            self.update_display()
-            
-            # Tự động bắt đầu trò chơi ngay sau khi chọn tệp và tải dữ liệu
-            self.start_game = True
-            self.perform_actions()  # Thực hiện các hành động từ tệp đầu ra nếu có
 
     def run(self):
         while True:
@@ -437,6 +411,15 @@ def read_input_file(filename):
                    
     return grid, grid_size
 
+def open_file_dialog():
+    """
+    Open a file dialog to select the input file.
+    """
+    root = tk.Tk()
+    root.withdraw()  # Hide the root window
+    file_path = filedialog.askopenfilename(filetypes=[("Text files", "*.txt")])
+    return file_path
+
 def read_output_file(filename):
         with open(filename, 'r') as file:
             lines = file.readlines()
@@ -455,9 +438,11 @@ def read_output_file(filename):
                 results.append(((x, y), action, direction, health, points))
 
         return results
+
+file_path = open_file_dialog()
 #i = Interface('test.txt', 'result1.txt')
 #a = Agent(i) 
 #a.explore_world()
-app = WumpusWorldApp("test.txt", "result1.txt")
+app = WumpusWorldApp(file_path, "result1.txt")
 app.run()
 #position, action, direction, health, points = read_output_file("result1.txt")
