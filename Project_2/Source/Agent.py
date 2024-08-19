@@ -244,8 +244,8 @@ class Agent:
             return True
         return False
     def explore_world(self):
-        # queue of safe cells
-        queue = []
+        # stack of safe cells
+        stack = []
 
         # explore the map untill agent die or no more safe cells
         while self.is_alive:
@@ -279,20 +279,20 @@ class Agent:
                     pit = self.check_pit(n)
                 if wumpus == False and pit == False:
                     safe_neighbors.append(n)
-            # add all safe cells to queue
+            # add all safe cells to stack
             safe_neighbors.reverse()
             for n in safe_neighbors:
-                if n in queue:
-                    queue.remove(n)
-            queue += safe_neighbors
+                if n in stack:
+                    stack.remove(n)
+            stack += safe_neighbors
             print('safe: ', safe_neighbors)
             # check if no more safe cell
-            if len(queue) == 0:
-                print('Empty queue')
+            if len(stack) == 0:
+                print('Empty stack')
                 break
-            next_cell = queue.pop()
+            next_cell = stack.pop()
             while next_cell in self.visited_cell:
-                next_cell = queue.pop()
+                next_cell = stack.pop()
             temp = (1, 1)
             if not self.is_adj_cell(self.current_cell, next_cell):
                 for i in range(len(self.visited_cell) - 1, -1 , -1):
@@ -306,9 +306,10 @@ class Agent:
                 self.point += 10
                 self.interface.fileOut.write(f'{str(self.current_cell)}: CLIMB: {str(self.direction)}: {str(self.health)}: {str(self.point)}: {self.hp}\n')
         if self.is_alive == False:
+            self.interface.fileOut.write(f'{str(self.current_cell)}: DIE: {str(self.direction)}: {str(self.health)}: {str(self.point)}: {self.hp}\n')
             print('Agent is dead')
         self.interface.fileOut.close()
 
-# i = Interface('map4.txt', 'result1.txt')
-# a = Agent(i) 
-# a.explore_world()
+i = Interface('map4.txt', 'result1.txt')
+a = Agent(i) 
+a.explore_world()
