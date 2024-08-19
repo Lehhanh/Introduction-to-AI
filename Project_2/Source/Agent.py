@@ -89,6 +89,7 @@ class Agent:
         if 'H_P' in percept:
             self.point -= 10
             self.hp += 1
+            self.interface.grab_hp(self.current_cell)
             self.interface.fileOut.write(f'{str(self.current_cell)}: GRAB_HP: {str(self.direction)}: {str(self.health)}: {str(self.point)}: {self.hp}\n')
         if 'S' in percept:
             self.KB.add(symbols(f'S{self.current_cell[0]}{self.current_cell[1]}'))
@@ -294,6 +295,6 @@ class Agent:
         self.interface.fileOut.write(f'{str(self.current_cell)}: CLIMB: {str(self.direction)}: {str(self.health)}: {str(self.point)}: {self.hp}\n')
         self.interface.fileOut.close()
 
-i = Interface('map1.txt', 'result1.txt')
-a = Agent(i) 
-a.explore_world()
+# i = Interface('map1.txt', 'result1.txt')
+# a = Agent(i) 
+# a.explore_world()
