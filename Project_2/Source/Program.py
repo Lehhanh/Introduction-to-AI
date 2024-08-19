@@ -71,8 +71,8 @@ class Program:
                     self.world[n[0]][n[1]] = '-'
 
 
-p = Program('test.txt')
-print(np.array(p.world))
+# p = Program('test.txt')
+# print(np.array(p.world))
 '''
 Wumpus: W
 Pit: P

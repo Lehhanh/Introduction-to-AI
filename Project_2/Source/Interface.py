@@ -33,6 +33,3 @@ class Interface(Program):
             self.remove_components(matrix_index, 'W')
             return True #scream
         return False
-    
-i = Interface('test.txt', 'result1.txt')
-print(i.get_percept((2, 3)))

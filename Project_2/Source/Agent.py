@@ -52,18 +52,15 @@ class Agent:
         # KB => a iff KB & ~a is unsatisfiable
         return not satisfiable(And(*self.KB, Not(conclusion)))
     def get_neighbors_agent(self, current_cell):
-        directions = [(0, 1), (1, 0), (0, -1), (-1, 0)]
         neighbors = []
-        for d in directions:
+        for d in direction_priority[self.direction]:
             neighbor = tuple([a+b for a, b in zip(current_cell, d)])
             if 0 < neighbor[0] <= self.world_size and 0 < neighbor[1] <= self.world_size:
                 neighbors.append(neighbor)
         return neighbors
     def update_agent(self):
         neighbor = list(set(self.get_neighbors_agent(self.current_cell)).difference([c.position for c in self.visited_cell]))
-        print('neighbors: ', neighbor)
         percept = self.interface.get_percept(self.current_cell)
-        print(percept)
         if 'W' in percept:
             self.point -= 10000
             self.is_alive = False
@@ -80,7 +77,7 @@ class Agent:
             self.interface.grab_gold(self.current_cell)
             self.interface.fileOut.write(f'{str(self.current_cell)}: GRAB_GOLD: {str(self.direction)}: {str(self.health)}: {str(self.point)}: {self.hp}\n')
         if 'P_G' in percept:
-            self.health = 0.75 * self.health
+            self.health = self.health - 25
             if self.health <= 0:
                 if self.hp == 0:
                     self.is_alive = False
@@ -88,7 +85,7 @@ class Agent:
                     self.hp -= 1
                     self.point -= 10
                     self.health += 25
-                    self.interface.fileOut.write(f'{str(self.current_cell)}: HEAL: {str(self.direction)}: {str(self.health)}: {str(self.point)}: {self.hp}')
+                    self.interface.fileOut.write(f'{str(self.current_cell)}: HEAL: {str(self.direction)}: {str(self.health)}: {str(self.point)}: {self.hp}\n')
         if 'H_P' in percept:
             self.point -= 10
             self.hp += 1
@@ -228,17 +225,23 @@ class Agent:
         isSucess, path = self.find_shortest_path(self.current_cell, des_cell)
         print('path: ', path)
         for i in range (1, len(path)):
+            self.update_agent()
             self.move_adj_cell(path[i])
     def explore_world(self):
         queue = []
         while self.is_alive:
-            print(self.current_cell)
+            print(self.current_cell, self.direction)
             self.update_agent()
             if not self.is_alive:
                 print('Agent is dead')
                 break
             self.visited_cell.append(Cell(self.current_cell, self.parent_cell))
-            neighbors = list(set(self.get_neighbors_agent(self.current_cell)).difference([c.position for c in self.visited_cell]))
+            # neighbors = list(set(self.get_neighbors_agent(self.current_cell)).difference([c.position for c in self.visited_cell]))
+            temp = self.get_neighbors_agent(self.current_cell)
+            neighbors = []
+            for n in temp:
+                if n not in [c.position for c in self.visited_cell]:
+                    neighbors.append(n)
             neighbors.reverse()
             safe_neighbors = []
             for n in neighbors:
@@ -255,16 +258,13 @@ class Agent:
                 if wumpus == False and pit == False:
                     safe_neighbors.append(Cell(n, self.current_cell))
             queue += safe_neighbors
-            # queue += list(set(safe_neighbors)-set(queue))
             print('safe: ', [c.position for c in safe_neighbors])
-            print('queue: ', [c.position for c in queue])
             if len(queue) == 0:
                 print('Empty queue')
                 break
             next_cell = queue.pop()
             while next_cell in [c.position for c in self.visited_cell]:
                 next_cell = queue.pop()
-            print(next_cell.position)
             if next_cell.parent_cell != self.current_cell:
                 self.move_back(next_cell.parent_cell)
             self.move_adj_cell(next_cell.position)
