@@ -2,13 +2,18 @@ from Agent import *
 from UI import *
 
 def main():
-    file_path = open_file_dialog()
-    i = Interface(file_path, 'result1.txt')
+    inputFilepath = open_file_dialog()
+
+    # create output file path based on input file path
+    slash_index = inputFilepath.rindex('/')
+    outputFilepath = inputFilepath[:slash_index] + inputFilepath[slash_index:].replace('map', 'result')
+
+    i = Interface(inputFilepath, outputFilepath)
     a = Agent(i) 
 
     a.explore_world()
 
-    app = WumpusWorldApp(file_path, "result1.txt")
+    app = WumpusWorldApp(inputFilepath, outputFilepath)
     app.run()
 
 if __name__ == "__main__":

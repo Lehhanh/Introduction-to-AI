@@ -160,9 +160,9 @@ class Agent:
         if self.infer(Not(symbols(f'P{cell[0]}{cell[1]}'))):
             return False
         return None
-    def check_safe(self, cell):
-        return self.check_wumpus(cell) == False and self.check_pit(cell) == False
     def find_shortest_path(self, src_cell, des_cell):
+        # find path base on GBFS
+        # rescontruct path from explored set
         def reconstructPath(explored, src_cell, des_cell):
             path = []
             i = len(explored) - 1
@@ -213,24 +213,30 @@ class Agent:
                 self.interface.fileOut.write(f'{str(self.current_cell)}: {a}: {str(current_direction)}: {str(self.health)}: {str(self.point)}: {self.hp}\n')
             self.direction = d
     def shoot_wumpus(self, cell):
+        # turn agent face to wumpus
         self.turn(cell)
         self.point -= 100
         self.interface.fileOut.write(f'{str(self.current_cell)}: SHOOT: {str(self.direction)}: {str(self.health)}: {str(self.point)}: {self.hp}\n')
+        # shoot agent and update map
         scream = self.interface.shoot(cell)
+        # Update KB for agent
         self.KB.add(Not(symbols(f'W{cell[0]}{cell[1]}')))
         neighbors = self.get_neighbors_agent(cell)
         for n in neighbors:
             self.KB.add(Not(symbols(f'S{cell[0]}{cell[1]}')))
         return scream
     def move_adj_cell(self, next_cell):
+        # turn agent face to next cell
         self.turn(next_cell)
         self.point -= 10
         self.interface.fileOut.write(f'{str(self.current_cell)}: MOVE_FORWARD: {str(self.direction)}: {str(self.health)}: {str(self.point)}: {self.hp}\n')
+        # update agent's info
         self.parent_cell = self.current_cell
         self.current_cell = next_cell
     def move_back(self, des_cell):
+        # find the shortest path that only has visited cells
         isSucess, path = self.find_shortest_path(self.current_cell, des_cell)
-        print('path: ', path)
+        # move sequentially
         self.move_adj_cell(path[1])
         for i in range (2, len(path)):
             self.update_agent()
@@ -239,6 +245,7 @@ class Agent:
             self.move_adj_cell(path[i])
         return True
     def is_adj_cell(self, cell1, cell2):
+        # the difference between two position (element-wise)
         temp = tuple([a-b for a, b in zip(cell1, cell2)])
         if temp == (1, 0) or temp == (0, 1) or temp == (-1, 0) or temp == (0, -1):
             return True
@@ -249,7 +256,6 @@ class Agent:
 
         # explore the map untill agent die or no more safe cells
         while self.is_alive:
-            print(self.current_cell, self.direction)
             # agent get percepts and add KB in this cell
             self.update_agent()
             # check if agent died
@@ -285,31 +291,34 @@ class Agent:
                 if n in stack:
                     stack.remove(n)
             stack += safe_neighbors
-            print('safe: ', safe_neighbors)
             # check if no more safe cell
             if len(stack) == 0:
-                print('Empty stack')
                 break
             next_cell = stack.pop()
+            # do not need to explore the cell in visited list
             while next_cell in self.visited_cell:
                 next_cell = stack.pop()
             temp = (1, 1)
+            # find the nearest safe cell
             if not self.is_adj_cell(self.current_cell, next_cell):
                 for i in range(len(self.visited_cell) - 1, -1 , -1):
                     if self.is_adj_cell(next_cell, self.visited_cell[i]):
                         temp = self.visited_cell[i]
+                # move to the adjacent cell (visited) of this safe cell
                 self.move_back(temp)
+            # move to next cell
             self.move_adj_cell(next_cell)
         if self.is_alive == True:
+            # move to the start positon
             isSuccess = self.move_back((1, 1))
             if isSuccess:
                 self.point += 10
                 self.interface.fileOut.write(f'{str(self.current_cell)}: CLIMB: {str(self.direction)}: {str(self.health)}: {str(self.point)}: {self.hp}\n')
+        # the agent is dead
         if self.is_alive == False:
             self.interface.fileOut.write(f'{str(self.current_cell)}: DIE: {str(self.direction)}: {str(self.health)}: {str(self.point)}: {self.hp}\n')
             print('Agent is dead')
         self.interface.fileOut.close()
 
-i = Interface('map4.txt', 'result1.txt')
+i = Interface('map1.txt', 'result1.txt')
 a = Agent(i) 
-a.explore_world()

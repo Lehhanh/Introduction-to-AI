@@ -47,19 +47,19 @@ class WumpusWorldApp:
         # Load and scale images
         self.agent_image_size = (self.cell_size, self.cell_size)
         self.images = {
-            'agent_up': pygame.transform.scale(pygame.image.load("Source/image/agent.png"), self.agent_image_size),
-            'agent_right': pygame.transform.scale(pygame.image.load("Source/image/right.png"), self.agent_image_size),
-            'agent_down': pygame.transform.scale(pygame.image.load("Source/image/down.png"), self.agent_image_size),
-            'agent_left': pygame.transform.scale(pygame.image.load("Source/image/left.png"), self.agent_image_size),
-            'heal': pygame.transform.scale(pygame.image.load("Source/image/healing_poison.png"), (self.cell_size // 2, self.cell_size // 2)),
-            'wumpus': pygame.transform.scale(pygame.image.load("Source/image/wumpus.png"), (self.cell_size // 2, self.cell_size // 2)),
-            'pit': pygame.transform.scale(pygame.image.load("Source/image/pit.png"), (self.cell_size // 2, self.cell_size // 2)),
-            'poison': pygame.transform.scale(pygame.image.load("Source/image/poison_gas.png"), (self.cell_size // 2, self.cell_size // 2)),
-            'gold': pygame.transform.scale(pygame.image.load("Source/image/gold.png"), (self.cell_size // 2, self.cell_size // 2)),
-            'stench': pygame.transform.scale(pygame.image.load("Source/image/stench.jpg"), (self.cell_size // 2, self.cell_size // 2)),
-            'breeze': pygame.transform.scale(pygame.image.load("Source/image/breeze.png"), (self.cell_size // 2, self.cell_size // 2)),
-            'whiff': pygame.transform.scale(pygame.image.load("Source/image/whiff.jpg"), (self.cell_size // 2, self.cell_size // 2)),
-            'glitter': pygame.transform.scale(pygame.image.load("Source/image/glow.png"), (self.cell_size // 2, self.cell_size // 2)),
+            'agent_up': pygame.transform.scale(pygame.image.load("image/agent.png"), self.agent_image_size),
+            'agent_right': pygame.transform.scale(pygame.image.load("image/right.png"), self.agent_image_size),
+            'agent_down': pygame.transform.scale(pygame.image.load("image/down.png"), self.agent_image_size),
+            'agent_left': pygame.transform.scale(pygame.image.load("image/left.png"), self.agent_image_size),
+            'heal': pygame.transform.scale(pygame.image.load("image/healing_poison.png"), (self.cell_size // 2, self.cell_size // 2)),
+            'wumpus': pygame.transform.scale(pygame.image.load("image/wumpus.png"), (self.cell_size // 2, self.cell_size // 2)),
+            'pit': pygame.transform.scale(pygame.image.load("image/pit.png"), (self.cell_size // 2, self.cell_size // 2)),
+            'poison': pygame.transform.scale(pygame.image.load("image/poison_gas.png"), (self.cell_size // 2, self.cell_size // 2)),
+            'gold': pygame.transform.scale(pygame.image.load("image/gold.png"), (self.cell_size // 2, self.cell_size // 2)),
+            'stench': pygame.transform.scale(pygame.image.load("image/stench.jpg"), (self.cell_size // 2, self.cell_size // 2)),
+            'breeze': pygame.transform.scale(pygame.image.load("image/breeze.png"), (self.cell_size // 2, self.cell_size // 2)),
+            'whiff': pygame.transform.scale(pygame.image.load("image/whiff.jpg"), (self.cell_size // 2, self.cell_size // 2)),
+            'glitter': pygame.transform.scale(pygame.image.load("image/glow.png"), (self.cell_size // 2, self.cell_size // 2)),
         }
 
     def load_grid(self, filename):
